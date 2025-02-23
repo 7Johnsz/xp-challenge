@@ -1,5 +1,7 @@
 from dotenv import load_dotenv
+
 import psycopg2
+import redis
 import os
 
 load_dotenv()
@@ -34,5 +36,7 @@ class Database:
             cursor.execute(sql, params)
             self.conn.commit()
 
+redis_conn = redis.Redis(host='localhost',port=6379, db=0)
 
 database = Database()
+
