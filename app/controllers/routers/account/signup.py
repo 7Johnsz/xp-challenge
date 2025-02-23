@@ -20,8 +20,7 @@ async def signup(request: Request, client: Client, response: Response):
                 "message": "Client signed up successfully",
                 "client_data": {
                     "email": client.email, "balance": 0},
-                "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            }
+                "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
     
     except psycopg2.errors.UniqueViolation:
         database.conn.rollback()
@@ -29,8 +28,7 @@ async def signup(request: Request, client: Client, response: Response):
         return {
             "status": "error",
             "message": "Email address already exists",
-            "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        }
+            "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
     
     except Exception as e:
         database.conn.rollback()
@@ -38,5 +36,4 @@ async def signup(request: Request, client: Client, response: Response):
         return {
             "status": "error",
             "message": "Internal server error",
-            "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        }
+            "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
