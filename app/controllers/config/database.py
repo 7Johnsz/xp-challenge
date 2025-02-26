@@ -9,14 +9,7 @@ load_dotenv()
 class Database:
     def __init__(self) -> None:
         try:
-            self.config = {
-                'database': os.getenv('DATABASE'),
-                'user': os.getenv('DATABASE_USER'), 
-                'password': os.getenv('DATABASE_PASSWORD'),
-                'host': os.getenv('DATABASE_HOST'),
-                'port': os.getenv('DATABASE_PORT')}
-            
-            self.conn = psycopg2.connect(**self.config)
+            self.conn = psycopg2.connect(os.getenv('DATABASE_URL'))
             self.conn.autocommit = False
              
         except Exception as e:
@@ -36,7 +29,19 @@ class Database:
             cursor.execute(sql, params)
             self.conn.commit()
 
-redis_conn = redis.Redis(host='localhost',port=6379, db=0)
+redis_host = os.getenv('REDIS_HOST')
+redis_port = os.getenv('REDIS_PORT')
+
+if not redis_host or not redis_port:
+    raise ValueError("REDIS_HOST and REDIS_PORT environment variables must be set")
+
+redis_conn = redis.StrictRedis(host=redis_host,
+                         port=int(redis_port),
+                         db=0,
+                         decode_responses=True)
+
+if redis_conn.ping():
+    print("Redis connection established")
 
 database = Database()
 

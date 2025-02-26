@@ -9,8 +9,6 @@ from ...config.api import router
 import datetime
 import psycopg2
 
-import redis
-
 @router.post("/login", response_class=ORJSONResponse)
 async def signup(request: Request, response: Response, login: Client):
     try:
@@ -56,6 +54,7 @@ async def signup(request: Request, response: Response, login: Client):
             
     except Exception as e:
         database.conn.rollback()
+        print(e)
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         return {
             "status": "error",
