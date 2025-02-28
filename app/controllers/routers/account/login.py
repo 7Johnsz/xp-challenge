@@ -3,6 +3,7 @@ from fastapi.responses import ORJSONResponse
 from ....utils.token import generate_uuid
 from ...config.database import redis_conn
 from ...config.database import database
+from ....utils.token import get_token
 from ....models.user import Client
 from ...config.api import router
 
@@ -15,7 +16,7 @@ async def signup(request: Request, response: Response, login: Client):
         user_Data = database.query(
             "SELECT * FROM client WHERE email = %s AND password = %s",
             (login.email, login.password))
-        
+                
         if user_Data != []:
             if redis_conn.exists(login.email):
                 return {
@@ -27,14 +28,14 @@ async def signup(request: Request, response: Response, login: Client):
                     "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
             
             if not redis_conn.exists(login.email):
-                redis_conn.set(login.email, generate_uuid(), ex=60 * 2)
+                redis_conn.set(login.email, generate_uuid(), ex=60 * 5)
                 value = redis_conn.get(login.email)
                 return {
                     "status": "success",
                     "message": "Client logged in successfully",
                     "acess_data": {
                         "refresh_token": value,
-                        "ttl": redis_conn.ttl(login.email)},
+                        "ttl": redis_conn.ttl(value)},
                     "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
         
         if user_Data == []:
