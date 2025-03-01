@@ -28,7 +28,7 @@ async def signup(request: Request, response: Response, login: Client):
                     "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
             
             if not redis_conn.exists(login.email):
-                redis_conn.set(login.email, generate_uuid(), ex=60 * 5)
+                redis_conn.set(login.email, generate_uuid(), ex=60 * 100)
                 value = redis_conn.get(login.email)
                 return {
                     "status": "success",
