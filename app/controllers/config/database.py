@@ -40,8 +40,5 @@ redis_conn = redis.StrictRedis(host=redis_host,
                          db=0,
                          decode_responses=True)
 
-if redis_conn.ping():
-    print("Redis connection established")
-
 database = Database()
 
