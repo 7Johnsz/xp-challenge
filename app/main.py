@@ -1,16 +1,18 @@
-# from fastapi.middleware.gzip import GZipMiddleware
 from .controllers.routers.finances import withdraw, deposit, checking_account as account
 from .controllers.routers.admin import all_withdraw_history, all_deposit_history, users
 from .controllers.routers.finances.stockmarket import asset, sell, buy, transactions
 from .controllers.routers.finances.history import withdraw_history, deposit_history
 from .controllers.routers.account import signup, login
 
+from fastapi.middleware.gzip import GZipMiddleware
 
 from fastapi import FastAPI
 
 app = FastAPI(docs="/docs")
 
-# app.add_middleware(GZipMiddleware)
+# Middleware - GZip
+app.add_middleware(GZipMiddleware)
+
 app.include_router(all_withdraw_history.router)
 app.include_router(all_deposit_history.router)
 app.include_router(withdraw_history.router)
