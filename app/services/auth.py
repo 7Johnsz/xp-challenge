@@ -40,11 +40,21 @@ def AuthService(func):
     """
     @wraps(func)
     async def wrapper(request: Request, *args, **kwargs):
-        auth_header = request.headers.get('Authorization').split()[1]
-        auth_response = check_redis_value(auth_header)
+        auth_header = request.headers.get('Authorization')
+        now = datetime.now().isoformat()
+
+        if auth_header == None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail={
+                    "msg": "You don't have permission to access this page",
+                    "timestamp": now
+                })
+            
+        auth_result = auth_header.split()[1]
+        auth_response = check_redis_value(auth_result)
 
         if auth_response[0] == False:
-            now = datetime.now().isoformat()
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail={
