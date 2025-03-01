@@ -1,11 +1,11 @@
 from fastapi import Request, status, Response
-from .....models.deposit_schema import Deposit
+from ....models.deposit_schema import Deposit
 from fastapi.responses import ORJSONResponse
-from .....services.auth import AuthService
-from ....config.database import redis_conn  
-from ....config.database import database
-from ....config.api import router
-from .....services.auth import find_key
+from ....services.auth import AuthService
+from ...config.database import redis_conn  
+from ...config.database import database
+from ...config.api import router
+from ....services.auth import find_key
 
 import datetime
 

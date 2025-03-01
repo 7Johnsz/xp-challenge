@@ -1,9 +1,9 @@
 from fastapi import Request, status, Response
 from fastapi.responses import ORJSONResponse
-from ......services.auth import AuthService
-from .....config.database import database
-from ......services.auth import find_key
-from .....config.api import router
+from .....services.auth import AuthService
+from ....config.database import database
+from .....services.auth import find_key
+from ....config.api import router
 
 import datetime
 
