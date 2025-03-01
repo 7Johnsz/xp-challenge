@@ -8,45 +8,45 @@ from ......models.buy_schema import BuyandSell
 
 import datetime
 
-@router.post("/stockmarket/buy", response_class=ORJSONResponse)
+@router.post("/stockmarket/sell", response_class=ORJSONResponse)
 @AuthService
-async def buy_asset(request: Request, response: Response, buy_asset: BuyandSell):
+async def sell_asset(request: Request, response: Response, sell_asset: BuyandSell):
     try:
         user_key = find_key(request.headers.get('Authorization').split()[1])[0]
         id_user = database.query("SELECT CodClient FROM client WHERE email = %s", (user_key,))[0][0]
 
-        asset_price = database.query("SELECT price FROM asset WHERE ticker = %s", (buy_asset.ticker,))[0][0]
-        asset_name = database.query("SELECT name FROM asset WHERE ticker = %s", (buy_asset.ticker,))[0][0]
+        asset_price = database.query("SELECT price FROM asset WHERE ticker = %s", (sell_asset.ticker,))[0][0]
+        asset_name = database.query("SELECT name FROM asset WHERE ticker = %s", (sell_asset.ticker,))[0][0]
         
-        if asset_price * buy_asset.quantity > database.query("SELECT balance FROM client WHERE email = %s", (user_key,))[0][0]:
+        if sell_asset.quantity > database.query("SELECT quantity FROM asset_client WHERE ticker = %s AND CodClient = %s", (sell_asset.ticker, id_user))[0][0]:
             database.conn.rollback()
             response.status_code = status.HTTP_400_BAD_REQUEST
             return {
                 "status": "error",
-                "message": "You don't have enough balance to buy this asset",
+                "message": "You don't own enough of this asset",
+                "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+
+        if database.query("SELECT * FROM asset_client WHERE ticker = %s AND CodClient = %s", (sell_asset.ticker, id_user)):
+            database.execute("UPDATE asset SET quantity = quantity + %s WHERE ticker = %s", (sell_asset.quantity, sell_asset.ticker))
+            database.execute("UPDATE asset_client SET quantity = quantity - %s WHERE ticker = %s AND CodClient = %s",
+                            (sell_asset.quantity, sell_asset.ticker, id_user))
+        else:
+            return {
+                "status": "error",
+                "message": "You don't own this asset",
                 "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
         
-        database.execute("UPDATE asset SET quantity = quantity - %s WHERE ticker = %s",
-                        (buy_asset.quantity, buy_asset.ticker))
-
-        if database.query("SELECT * FROM asset_client WHERE ticker = %s AND CodClient = %s", (buy_asset.ticker, id_user)):
-            database.execute("UPDATE asset_client SET quantity = quantity + %s WHERE ticker = %s AND CodClient = %s",
-                            (buy_asset.quantity, buy_asset.ticker, id_user))
-        else:
-            database.execute("INSERT INTO asset_client (ticker, CodClient, quantity) VALUES (%s, %s, %s)",
-                            (buy_asset.ticker, id_user, buy_asset.quantity))
-        
         database.execute("INSERT INTO transaction (CodClient, ticker, quantity, price, transaction_type) VALUES (%s, %s, %s, %s, %s)",
-                        (id_user, buy_asset.ticker, buy_asset.quantity, asset_price, "BUY"))
+                        (id_user, sell_asset.ticker, sell_asset.quantity, asset_price, "SELL"))
         
         return {
             "status": "success",
-            "message": "Asset bought successfully",
+            "message": "Asset sold successfully",
             "email": user_key,
             "stockmarket": {
                 "name": asset_name,
-                "ticker": buy_asset.ticker,
-                "quantity": buy_asset.quantity},
+                "ticker": sell_asset.ticker,
+                "quantity": sell_asset.quantity},
             "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
          
