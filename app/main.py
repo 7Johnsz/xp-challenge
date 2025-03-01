@@ -4,6 +4,7 @@ from .controllers.routers.account.finances.stockmarket import transactions
 from .controllers.routers.account.finances.history import withdraw_history
 from .controllers.routers.account.finances.history import deposit_history
 from .controllers.routers.account.finances.stockmarket import asset
+from .controllers.routers.account.finances.stockmarket import sell
 from .controllers.routers.account.finances.stockmarket import buy
 from .controllers.routers.account.finances import withdraw
 from .controllers.routers.account.finances import deposit
@@ -23,6 +24,7 @@ app.include_router(account.router)
 app.include_router(signup.router)
 app.include_router(login.router)
 app.include_router(asset.router)
+app.include_router(sell.router)
 app.include_router(buy.router)
 
 @app.get("/")
