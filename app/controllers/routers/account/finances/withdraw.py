@@ -16,10 +16,19 @@ async def withdraw(request: Request, response: Response, withdraw_data: Withdraw
         user_key = find_key(request.headers.get('Authorization').split()[1])[0]                
         id_user = database.query("SELECT CodClient FROM client WHERE email = %s", (user_key,))[0][0]
         balance = database.query("SELECT balance FROM client WHERE email = %s", (user_key,))[0][0]
+       
+        if withdraw_data.value > balance:
+            database.conn.rollback()
+            response.status_code = status.HTTP_400_BAD_REQUEST
+            return {
+                "status": "error",
+                "message": "Insufficient balance.",
+                "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
         
-        database.execute("UPDATE client SET balance = balance - %s WHERE CodClient = %s", (withdraw_data.value, id_user))
-        database.execute("INSERT INTO withdraw_history (CodClient, value) VALUES (%s, %s)", (id_user, withdraw_data.value))
-                      
+        else:
+            database.execute("UPDATE client SET balance = balance - %s WHERE CodClient = %s", (withdraw_data.value, id_user))
+            database.execute("INSERT INTO withdraw_history (CodClient, value) VALUES (%s, %s)", (id_user, withdraw_data.value))
+                        
         return {
             "status": "success",
             "message": "Deposit processed successfully.",
