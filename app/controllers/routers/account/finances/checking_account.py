@@ -9,7 +9,7 @@ import datetime
 
 @router.get("/account", response_class=ORJSONResponse)
 @AuthService
-async def get_account_details(request: Request, response: Response):
+async def checking_account(request: Request, response: Response):
     try:
         user_key = find_key(request.headers.get('Authorization').split()[1])[0]
         id_user = database.query("SELECT CodClient FROM client WHERE email = %s", (user_key,))[0][0]

@@ -11,7 +11,7 @@ import datetime
 
 @router.patch("/deposit", response_class=ORJSONResponse)
 @AuthService
-async def signup(request: Request, response: Response, deposit_data: Deposit):
+async def deposit(request: Request, response: Response, deposit_data: Deposit):
     try:
         user_key = find_key(request.headers.get('Authorization').split()[1])[0]                
         id_user = database.query("SELECT CodClient FROM client WHERE email = %s", (user_key,))[0][0]

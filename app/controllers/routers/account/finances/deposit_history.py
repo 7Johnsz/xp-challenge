@@ -9,7 +9,7 @@ import datetime
 
 @router.get("/deposit-history", response_class=ORJSONResponse)
 @AuthService
-async def get_account_details(request: Request, response: Response):
+async def deposit_history(request: Request, response: Response):
     try:
         user_key = find_key(request.headers.get('Authorization').split()[1])[0]
         id_user = database.query("SELECT CodClient FROM client WHERE email = %s", (user_key,))[0][0]
@@ -20,8 +20,7 @@ async def get_account_details(request: Request, response: Response):
             deposit_history.append({
                 "id": deposit[0],
                 "amount": deposit[2],
-                "transaction_at": deposit[3]
-            })
+                "transaction_at": deposit[3]})
         
         return {
             "status": "success",
