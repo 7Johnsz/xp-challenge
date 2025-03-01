@@ -32,7 +32,6 @@ async def checking_account(request: Request, response: Response):
 
         assets_info = []
         for asset in assets_results:
-            print(asset)
             assets_info.append({
                 "ticker": asset[0],
                 "quantity": asset[1]
