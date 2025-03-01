@@ -1,7 +1,7 @@
 # from fastapi.middleware.gzip import GZipMiddleware
-from .controllers.routers.account.finances import withdraw, deposit, checking_account as account
-from .controllers.routers.account.finances.stockmarket import asset, sell, buy, transactions
-from .controllers.routers.account.finances.history import withdraw_history, deposit_history
+from .controllers.routers.finances import withdraw, deposit, checking_account as account
+from .controllers.routers.finances.stockmarket import asset, sell, buy, transactions
+from .controllers.routers.finances.history import withdraw_history, deposit_history
 from .controllers.routers.account import signup, login
 
 from fastapi import FastAPI
