@@ -25,9 +25,8 @@ async def withdraw(request: Request, response: Response, withdraw_data: Withdraw
                 "message": "Insufficient balance.",
                 "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
         
-        else:
-            database.execute("UPDATE client SET balance = balance - %s WHERE CodClient = %s", (withdraw_data.value, id_user))
-            database.execute("INSERT INTO withdraw_history (CodClient, value) VALUES (%s, %s)", (id_user, withdraw_data.value))
+        database.execute("UPDATE client SET balance = balance - %s WHERE CodClient = %s", (withdraw_data.value, id_user))
+        database.execute("INSERT INTO withdraw_history (CodClient, value) VALUES (%s, %s)", (id_user, withdraw_data.value))
                         
         return {
             "status": "success",
