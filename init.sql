@@ -18,21 +18,25 @@ CREATE TABLE IF NOT EXISTS asset (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Atualizando a tabela `asset_client` para incluir o ticker
 CREATE TABLE IF NOT EXISTS asset_client (
-    CodAsset BIGINT REFERENCES asset(CodAsset) ON DELETE CASCADE,
+    ticker VARCHAR(10) NOT NULL,
     CodClient BIGINT REFERENCES client(CodClient) ON DELETE CASCADE,
     quantity BIGINT NOT NULL CHECK (quantity >= 0),
-    PRIMARY KEY (CodAsset, CodClient)
+    PRIMARY KEY (ticker, CodClient),
+    FOREIGN KEY (ticker) REFERENCES asset(ticker)
 );
 
+-- Atualizando a tabela `transaction` para incluir o ticker e remover o CodAsset
 CREATE TABLE IF NOT EXISTS transaction (
     CodTransaction BIGSERIAL PRIMARY KEY,
     CodClient BIGINT REFERENCES client(CodClient) ON DELETE CASCADE,
-    CodAsset BIGINT REFERENCES asset(CodAsset) ON DELETE CASCADE,
+    ticker VARCHAR(10) NOT NULL,
     quantity BIGINT NOT NULL CHECK (quantity > 0),
-    price NUMERIC(10,2) NOT NULL CHECK (price >= 0),  
+    price NUMERIC(10,2) NOT NULL CHECK (price >= 0),
     transaction_type VARCHAR(4) NOT NULL CHECK (transaction_type IN ('BUY', 'SELL')),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (ticker) REFERENCES asset(ticker)
 );
 
 CREATE TABLE IF NOT EXISTS withdraw_history (
