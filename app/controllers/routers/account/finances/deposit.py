@@ -19,9 +19,7 @@ async def deposit(request: Request, response: Response, deposit_data: Deposit):
         
         database.execute("UPDATE client SET balance = balance + %s WHERE CodClient = %s", (deposit_data.value, id_user))
         database.execute("INSERT INTO deposit_history (CodClient, value) VALUES (%s, %s)", (id_user, deposit_data.value))
-            
-        print(database.query("SELECT * FROM deposit_history WHERE CodClient = %s", (id_user,)))  
-          
+                      
         return {
             "status": "success",
             "message": "Deposit processed successfully.",
