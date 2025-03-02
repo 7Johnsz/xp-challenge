@@ -1,8 +1,10 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class Client(BaseModel):
     email: str
     password: str
     
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(
+        extra="forbid",
+        frozen=True  
+    )
