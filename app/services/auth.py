@@ -57,11 +57,11 @@ def AuthService(func):
                     }
                 )
 
-        except Exception as e:
+        except Exception:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail={
-                    "msg": f"Redis error: {str(e)}",
+                    "msg": "You don't have permission to access this page",
                     "timestamp": now
                 }
             )
