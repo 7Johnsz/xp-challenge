@@ -11,6 +11,41 @@ import datetime
 @router.post("/stockmarket/sell", response_class=ORJSONResponse)
 @AuthService
 async def sell_asset(request: Request, response: Response, sell_asset: BuyandSell):
+    """
+    Endpoint to sell an asset in the stock market.
+    
+    This endpoint allows authenticated users to sell an asset by specifying its ticker and quantity. 
+    It checks if the asset exists, if the user owns the asset in the specified quantity, and records the transaction.
+    
+    Parameters:
+    - **request** (Request): The incoming HTTP request containing authorization headers.
+    - **response** (Response): The response object to modify HTTP status codes.
+    - **sell_asset** (BuyandSell): A Pydantic model containing the ticker and quantity of the asset to be sold.
+    
+    Returns:
+    - **200 OK**: If the sale is successful.
+    - **400 Bad Request**: If the user does not own enough of the asset or if other validation fails.
+    - **404 Not Found**: If the asset or the user's ownership of the asset is not found.
+    - **500 Internal Server Error**: If an unexpected error occurs.
+    
+    Response Structure:
+    ```json
+    {
+        "status": "success",
+        "message": "Asset sold successfully",
+        "email": "user@example.com",
+        "stockmarket": {
+            "name": "Company XYZ",
+            "ticker": "XYZ",
+            "quantity": 10
+        },
+        "datetime": "2025-03-06 12:34:56"
+    }
+    ```
+    
+    Raises:
+    - **HTTPException**: If an unexpected error occurs during the transaction.
+    """
     try:
         user_key = find_key(request.headers.get('Authorization').split()[1])[0]
         id_user = database.query("SELECT CodClient FROM client WHERE email = %s", (user_key,))[0][0]
@@ -42,7 +77,8 @@ async def sell_asset(request: Request, response: Response, sell_asset: BuyandSel
             return {
                 "status": "error",
                 "message": "You don't own enough of this asset",
-                "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+                "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
         
         database.execute("UPDATE asset SET quantity = quantity + %s WHERE ticker = %s", (sell_asset.quantity, sell_asset.ticker))
         database.execute("UPDATE asset_client SET quantity = quantity - %s WHERE ticker = %s AND CodClient = %s",
@@ -64,7 +100,6 @@ async def sell_asset(request: Request, response: Response, sell_asset: BuyandSel
          
     except Exception as e:
         database.conn.rollback()
-        print(e)
         response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         return {
             "status": "error",
