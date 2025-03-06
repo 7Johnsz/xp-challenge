@@ -15,8 +15,26 @@ async def sell_asset(request: Request, response: Response, sell_asset: BuyandSel
         user_key = find_key(request.headers.get('Authorization').split()[1])[0]
         id_user = database.query("SELECT CodClient FROM client WHERE email = %s", (user_key,))[0][0]
 
+        if database.query("SELECT * FROM asset WHERE ticker = %s", (sell_asset.ticker,)) == []:
+            database.conn.rollback()
+            response.status_code = status.HTTP_404_NOT_FOUND
+            return {
+                "status": "error",
+                "message": "Asset not found",
+                "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+        
         asset_price = database.query("SELECT price FROM asset WHERE ticker = %s", (sell_asset.ticker,))[0][0]
         asset_name = database.query("SELECT name FROM asset WHERE ticker = %s", (sell_asset.ticker,))[0][0]
+                
+        if database.query("SELECT quantity FROM asset_client WHERE ticker = %s", (sell_asset.ticker,)) == []:
+            database.conn.rollback()
+            response.status_code = status.HTTP_404_NOT_FOUND
+            return {
+                "status": "error",
+                "message": "You don't own this asset",
+                "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
         
         if sell_asset.quantity > database.query("SELECT quantity FROM asset_client WHERE ticker = %s AND CodClient = %s", (sell_asset.ticker, id_user))[0][0]:
             database.conn.rollback()
@@ -25,24 +43,19 @@ async def sell_asset(request: Request, response: Response, sell_asset: BuyandSel
                 "status": "error",
                 "message": "You don't own enough of this asset",
                 "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
-
-        if database.query("SELECT * FROM asset_client WHERE ticker = %s AND CodClient = %s", (sell_asset.ticker, id_user)):
-            database.execute("UPDATE asset SET quantity = quantity + %s WHERE ticker = %s", (sell_asset.quantity, sell_asset.ticker))
-            database.execute("UPDATE asset_client SET quantity = quantity - %s WHERE ticker = %s AND CodClient = %s",
-                            (sell_asset.quantity, sell_asset.ticker, id_user))
-        else:
-            return {
-                "status": "error",
-                "message": "You don't own this asset",
-                "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
         
+        database.execute("UPDATE asset SET quantity = quantity + %s WHERE ticker = %s", (sell_asset.quantity, sell_asset.ticker))
+        database.execute("UPDATE asset_client SET quantity = quantity - %s WHERE ticker = %s AND CodClient = %s",
+                        (sell_asset.quantity, sell_asset.ticker, id_user))
         database.execute("INSERT INTO transaction (CodClient, ticker, quantity, price, transaction_type) VALUES (%s, %s, %s, %s, %s)",
                         (id_user, sell_asset.ticker, sell_asset.quantity, asset_price, "SELL"))
+        new_balance = database.execute("UPDATE client SET balance = balance + %s WHERE email = %s", (asset_price * sell_asset.quantity, user_key))
         
         return {
             "status": "success",
             "message": "Asset sold successfully",
             "email": user_key,
+            "new_balance": new_balance,
             "stockmarket": {
                 "name": asset_name,
                 "ticker": sell_asset.ticker,
