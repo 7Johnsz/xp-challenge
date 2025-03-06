@@ -10,6 +10,53 @@ import datetime
 @router.get("/transactions", response_class=ORJSONResponse)
 @AuthService
 async def transactions(request: Request, response: Response):
+    """
+    Endpoint to retrieve the transaction history of a user.
+
+    This endpoint allows authenticated users to retrieve a list of their previous transactions, including the asset 
+    ticker, quantity, price, transaction type (buy or sell), and the transaction creation date.
+
+    Parameters:
+    - **request** (Request): The incoming HTTP request containing authorization headers.
+    - **response** (Response): The response object to modify HTTP status codes.
+
+    Returns:
+    - **200 OK**: If the transaction history is retrieved successfully.
+    - **500 Internal Server Error**: If an unexpected error occurs.
+
+    Response Structure:
+    ```json
+    {
+        "status": "success",
+        "message": "Transactions retrieved successfully",
+        "email": "user@example.com",
+        "history": [
+            {
+                "id": 1,
+                "id_client": 123,
+                "ticker": "ABC",
+                "quantity": 100,
+                "price": 50.25,
+                "transaction_type": "buy",
+                "created_at": "2025-03-06 12:34:56"
+            },
+            {
+                "id": 2,
+                "id_client": 123,
+                "ticker": "XYZ",
+                "quantity": 200,
+                "price": 75.50,
+                "transaction_type": "sell",
+                "created_at": "2025-03-06 12:34:56"
+            }
+        ],
+        "datetime": "2025-03-06 12:34:56"
+    }
+    ```
+
+    Raises:
+    - **HTTPException**: If an unexpected error occurs during the retrieval of the transaction history.
+    """
     try:
         user_key = find_key(request.headers.get('Authorization').split()[1])[0]
         id_user = database.query("SELECT CodClient FROM client WHERE email = %s", (user_key,))[0][0]
