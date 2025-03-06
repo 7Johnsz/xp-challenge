@@ -1,6 +1,6 @@
+from ....services.admin import AdminAuthService
 from fastapi import Request, status, Response
 from fastapi.responses import ORJSONResponse
-from ....services.admin import AdminAuthService
 from ...config.database import database
 from ....services.auth import find_key
 from ...config.api import router
@@ -9,7 +9,35 @@ import datetime
 
 @router.get("/admin/users", response_class=ORJSONResponse)
 @AdminAuthService
-async def all_deposit_history(request: Request, response: Response):
+async def users(request: Request, response: Response):
+    """
+    Endpoint to fetch the list of all clients, ordered by their creation date.
+
+    Args:
+    - request (Request): The request object from FastAPI.
+    - response (Response): The response object from FastAPI.
+
+    Returns:
+    - ORJSONResponse: A JSON response containing the client information or an error message if something goes wrong.
+
+    Success Response:
+    - {
+        "status": "success",
+        "message": "Client history fetched successfully.",
+        "client": [
+            {"id": 1, "email": "user1@example.com", "balance": 1000.00, "created_at": "2025-03-06 12:34:56"},
+            {"id": 2, "email": "user2@example.com", "balance": 2000.00, "created_at": "2025-03-05 11:45:30"}
+        ],
+        "datetime": "2025-03-06 12:34:56"
+    }
+
+    Error Response:
+    - {
+        "status": "error",
+        "message": "Internal server error",
+        "datetime": "2025-03-06 12:34:56"
+    }
+    """
     try:
         client_results = database.query("SELECT * FROM client ORDER BY created_at DESC")
         

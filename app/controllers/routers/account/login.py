@@ -12,6 +12,51 @@ import psycopg2
 
 @router.post("/login", response_class=ORJSONResponse)
 async def signup(request: Request, response: Response, login: Client):
+    """
+    Endpoint to log in a client using their email and password.
+
+    Args:
+    - request (Request): The request object from FastAPI.
+    - response (Response): The response object from FastAPI.
+    - login (Client): Client model containing the user's email and password.
+
+    Returns:
+    - ORJSONResponse: A JSON response containing either a success message with access data
+                      (refresh token and time-to-live) or an error message.
+
+    Success Response (with access data):
+    - {
+        "status": "success",
+        "message": "Client logged in successfully",
+        "acess_data": {
+            "refresh_token": "some_generated_token",
+            "ttl": 6000
+        },
+        "datetime": "2025-03-06 12:34:56"
+    }
+
+    Error Responses:
+    - 404 Not Found (Client unknown or password incorrect):
+      {
+          "status": "error",
+          "message": "Client unknown or password incorrect",
+          "datetime": "2025-03-06 12:34:56"
+      }
+
+    - 409 Conflict (Email address already exists):
+      {
+          "status": "error",
+          "message": "Email address already exists",
+          "datetime": "2025-03-06 12:34:56"
+      }
+
+    - 500 Internal Server Error (General error):
+      {
+          "status": "error",
+          "message": "Internal server error",
+          "datetime": "2025-03-06 12:34:56"
+      }
+    """
     try:
         user_Data = database.query(
             "SELECT * FROM client WHERE email = %s AND password = %s",
