@@ -17,7 +17,7 @@ async def buy_asset(request: Request, response: Response, buy_asset: BuyandSell)
 
         asset_price = database.query("SELECT price FROM asset WHERE ticker = %s", (buy_asset.ticker,))[0][0]
         asset_name = database.query("SELECT name FROM asset WHERE ticker = %s", (buy_asset.ticker,))[0][0]
-        
+
         if asset_price * buy_asset.quantity > database.query("SELECT balance FROM client WHERE email = %s", (user_key,))[0][0]:
             database.conn.rollback()
             response.status_code = status.HTTP_400_BAD_REQUEST
@@ -25,10 +25,10 @@ async def buy_asset(request: Request, response: Response, buy_asset: BuyandSell)
                 "status": "error",
                 "message": "You don't have enough balance to buy this asset",
                 "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
-        
+            
         database.execute("UPDATE asset SET quantity = quantity - %s WHERE ticker = %s",
                         (buy_asset.quantity, buy_asset.ticker))
-
+        
         if database.query("SELECT * FROM asset_client WHERE ticker = %s AND CodClient = %s", (buy_asset.ticker, id_user)):
             database.execute("UPDATE asset_client SET quantity = quantity + %s WHERE ticker = %s AND CodClient = %s",
                             (buy_asset.quantity, buy_asset.ticker, id_user))
