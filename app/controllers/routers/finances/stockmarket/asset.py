@@ -10,6 +10,51 @@ import datetime
 @router.get("/stockmarket", response_class=ORJSONResponse)
 @AuthService
 async def stockmarket(request: Request, response: Response):
+    """
+    Endpoint to retrieve the current stock market data.
+
+    This endpoint allows authenticated users to view the full list of available assets in the stock market, including 
+    their name, ticker symbol, price, quantity, and creation date.
+
+    Parameters:
+    - **request** (Request): The incoming HTTP request containing authorization headers.
+    - **response** (Response): The response object to modify HTTP status codes.
+
+    Returns:
+    - **200 OK**: If the stock market data is retrieved successfully.
+    - **500 Internal Server Error**: If an unexpected error occurs.
+
+    Response Structure:
+    ```json
+    {
+        "status": "success",
+        "message": "Current stock market successfully obtained.",
+        "email": "user@example.com",
+        "stockmarket": [
+            {
+                "id": 1,
+                "name": "Company ABC",
+                "ticker": "ABC",
+                "price": 100.50,
+                "quantity": 500,
+                "created_at": "2025-03-06 12:34:56"
+            },
+            {
+                "id": 2,
+                "name": "Company XYZ",
+                "ticker": "XYZ",
+                "price": 75.25,
+                "quantity": 300,
+                "created_at": "2025-03-06 12:34:56"
+            }
+        ],
+        "datetime": "2025-03-06 12:34:56"
+    }
+    ```
+
+    Raises:
+    - **HTTPException**: If an unexpected error occurs during the retrieval of stock market data.
+    """
     try:
         user_key = find_key(request.headers.get('Authorization').split()[1])[0]
         stockmarket = database.query("SELECT * FROM asset")
