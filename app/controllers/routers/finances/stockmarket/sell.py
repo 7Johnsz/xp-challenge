@@ -49,13 +49,12 @@ async def sell_asset(request: Request, response: Response, sell_asset: BuyandSel
                         (sell_asset.quantity, sell_asset.ticker, id_user))
         database.execute("INSERT INTO transaction (CodClient, ticker, quantity, price, transaction_type) VALUES (%s, %s, %s, %s, %s)",
                         (id_user, sell_asset.ticker, sell_asset.quantity, asset_price, "SELL"))
-        new_balance = database.execute("UPDATE client SET balance = balance + %s WHERE email = %s", (asset_price * sell_asset.quantity, user_key))
+        database.execute("UPDATE client SET balance = balance + %s WHERE email = %s", (asset_price * sell_asset.quantity, user_key))
         
         return {
             "status": "success",
             "message": "Asset sold successfully",
             "email": user_key,
-            "new_balance": new_balance,
             "stockmarket": {
                 "name": asset_name,
                 "ticker": sell_asset.ticker,
