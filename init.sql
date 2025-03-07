@@ -18,7 +18,6 @@ CREATE TABLE IF NOT EXISTS asset (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Atualizando a tabela `asset_client` para incluir o ticker
 CREATE TABLE IF NOT EXISTS asset_client (
     ticker VARCHAR(10) NOT NULL,
     CodClient BIGINT REFERENCES client(CodClient) ON DELETE CASCADE,
@@ -27,7 +26,6 @@ CREATE TABLE IF NOT EXISTS asset_client (
     FOREIGN KEY (ticker) REFERENCES asset(ticker)
 );
 
--- Atualizando a tabela `transaction` para incluir o ticker e remover o CodAsset
 CREATE TABLE IF NOT EXISTS transaction (
     CodTransaction BIGSERIAL PRIMARY KEY,
     CodClient BIGINT REFERENCES client(CodClient) ON DELETE CASCADE,
@@ -63,13 +61,12 @@ INSERT INTO asset (name, ticker, price, quantity) VALUES
     ('Meta Platforms Inc.', 'META', 360.90, 35),
     ('Netflix Inc.', 'NFLX', 510.75, 15),
     ('Berkshire Hathaway Inc.', 'BRK.B', 320.50, 12),
-    ('Johnson & Johnson', 'JNJ', 165.30, 45);
+    ('Johnson & Johnson', 'JNJ', 165.30, 45),
     ('Gold ETF', 'GLD', 185.75, 100),
     ('Bitcoin Trust', 'GBTC', 43.20, 200),
-    ('Ethereum Fund', 'ETHF', 3,250.80, 50),
+    ('Ethereum Fund', 'ETHF', 3250.80, 50),
     ('Coca-Cola Co.', 'KO', 60.45, 75),
     ('PepsiCo Inc.', 'PEP', 180.30, 60),
-    ('McDonald\'s Corp.', 'MCD', 275.60, 40),
     ('Walt Disney Co.', 'DIS', 145.25, 55),
     ('Intel Corp.', 'INTC', 48.90, 90),
     ('Advanced Micro Devices', 'AMD', 110.75, 70),
