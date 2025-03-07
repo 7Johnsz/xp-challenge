@@ -6,12 +6,10 @@ from .controllers.routers.account import signup, login
 
 from fastapi.middleware.gzip import GZipMiddleware
 from slowapi.errors import RateLimitExceeded
-
 from fastapi.responses import JSONResponse
-
 from fastapi import FastAPI, Request
 
-app = FastAPI(docs="/docs")
+app = FastAPI(docs="/docs", openapi_url="/openapi.json")
 
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 
