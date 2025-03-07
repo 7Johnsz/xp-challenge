@@ -1,4 +1,4 @@
-<img src="/.github/images/xp-inc-logo.png" alt="xp-inc" width=200px>
+<img src="/.github/images/xp-inc-logo.png" alt="xp-inc" width=300px>
 
 # XP Inc. | Backend Sênior
 
@@ -8,7 +8,7 @@ Este projeto trata-se de um desafio técnico backend da **XP Inc**. Solucionado 
 
 ## Controle de Token - Design
 
-<img src="/.github/images/design1.png" alt="xp-inc" width=600px>
+<img src="/.github/images/design1.png" alt="xp-inc" width=730px>
 
 ## Frameworks 🛠️
 
@@ -392,6 +392,4 @@ AUTHORIZATION: 123 (Vicê pode customizar no .env)
     > git clone https://github.com/7Johnsz/xp-challenge.git
 
 2. Buildar conteiners utilizando Docker
-    > docker-compose up -d 
-
-    E Pronto!
+    > docker-compose up -d
