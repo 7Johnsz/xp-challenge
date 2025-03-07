@@ -1,5 +1,7 @@
-<img src="/.github/images/xp-inc-logo.png" alt="xp-inc" width=300px>
-<img src="/.github/images/trybe.png" alt="xp-inc" width=300px>
+<div style="display: flex; gap: 1rem">
+    <img src="/.github/images/xp-inc-logo.png" alt="xp-inc" width=300px>
+    <img src="/.github/images/trybe.png" alt="xp-inc" width=300px>
+</div>
 
 # XP Inc. | Backend Sênior
 
