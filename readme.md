@@ -15,7 +15,6 @@ Este projeto trata-se de um desafio técnico backend da **XP Inc**. Solucionado 
 
 - [FastAPI](https://fastapi.tiangolo.com/)
 - [Uvicorn](https://www.uvicorn.org/)
-- [PyTest](https://docs.pytest.org/en/stable/)
 - [SlowAPI](https://pypi.org/project/slowapi/)
 - [ORJSON](https://github.com/ijl/orjson)
 - [Redis](https://redis.io/)
