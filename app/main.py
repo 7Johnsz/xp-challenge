@@ -10,7 +10,6 @@ from fastapi import FastAPI
 
 app = FastAPI(docs="/docs")
 
-# Middleware - GZip
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 app.include_router(all_withdraw_history.router)
