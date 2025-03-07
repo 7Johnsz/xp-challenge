@@ -1,10 +1,3 @@
-docker-compose down -v
-docker-compose up -d
-
-
-docker-compose down -v
-docker-compose up --build
-
 <img src="/.github/images/xp-inc-logo.png" alt="xp-inc" width=100px>
 
 # XP Inc. | Backend Sênior
@@ -396,7 +389,7 @@ AUTHORIZATION: 123 (Vicê pode customizar no .env)
 > Siga estes passos para instalar e configurar o projeto:
 
 1. Clone o repositório:
-    > git clone https://github.com/7Johnsz/Uber-FoodTrucks.git
+    > git clone https://github.com/7Johnsz/xp-challenge.git
 
 2. Buildar conteiners utilizando Docker
     > docker-compose up -d 
