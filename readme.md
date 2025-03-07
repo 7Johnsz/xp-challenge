@@ -1,4 +1,4 @@
-<img src="/.github/images/xp-inc-logo.png" alt="xp-inc" width=100px>
+<img src="/.github/images/xp-inc-logo.png" alt="xp-inc" width=200px>
 
 # XP Inc. | Backend Sênior
 
@@ -8,7 +8,7 @@ Este projeto trata-se de um desafio técnico backend da **XP Inc**. Solucionado 
 
 ## Controle de Token - Design
 
-<img src="/.github/images/design1.png" alt="xp-inc" width=450px>
+<img src="/.github/images/design1.png" alt="xp-inc" width=600px>
 
 ## Frameworks 🛠️
 
