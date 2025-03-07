@@ -68,7 +68,7 @@ async def signup(request: Request, response: Response, login: Client):
                     "status": "success",
                     "message": "Client logged in successfully",
                     "acess_data": {
-                        "refresh_token": redis_conn.get(login.email),
+                        "acess_token": redis_conn.get(login.email),
                         "ttl": redis_conn.ttl(login.email)},
                     "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
             
@@ -79,7 +79,7 @@ async def signup(request: Request, response: Response, login: Client):
                     "status": "success",
                     "message": "Client logged in successfully",
                     "acess_data": {
-                        "refresh_token": value,
+                        "acess_token": value,
                         "ttl": redis_conn.ttl(value)},
                     "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
         
