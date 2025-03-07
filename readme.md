@@ -16,6 +16,7 @@ Este projeto trata-se de um desafio técnico backend da **XP Inc**. Solucionado 
 - [FastAPI](https://fastapi.tiangolo.com/)
 - [Uvicorn](https://www.uvicorn.org/)
 - [SlowAPI](https://pypi.org/project/slowapi/)
+- [Traefik](https://traefik.io/)
 - [ORJSON](https://github.com/ijl/orjson)
 - [Redis](https://redis.io/)
 - [Psycopg2](https://www.psycopg.org/)
@@ -392,4 +393,6 @@ AUTHORIZATION: 123 (Vicê pode customizar no .env)
     > git clone https://github.com/7Johnsz/xp-challenge.git
 
 2. Buildar conteiners utilizando Docker
-    > docker-compose up -d
+    > docker compose up -d
+    ou
+    > docker compose up --build
