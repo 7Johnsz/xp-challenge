@@ -1,4 +1,5 @@
 <img src="/.github/images/xp-inc-logo.png" alt="xp-inc" width=300px>
+<img src="/.github/images/trybe.png" alt="xp-inc" width=300px>
 
 # XP Inc. | Backend Sênior
 
