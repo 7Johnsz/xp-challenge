@@ -3,13 +3,14 @@ from ....models.withdraw_schema import Withdraw
 from fastapi.responses import ORJSONResponse
 from ....services.auth import AuthService
 from ...config.database import redis_conn  
+from ...config.api import router, limiter
 from ...config.database import database
-from ...config.api import router
 from ....services.auth import find_key
 
 import datetime
 
 @router.patch("/withdraw", response_class=ORJSONResponse)
+@limiter.limit("30/minute")
 @AuthService
 async def withdraw(request: Request, response: Response, withdraw_data: Withdraw):
     """

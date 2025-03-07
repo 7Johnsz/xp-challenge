@@ -5,8 +5,11 @@ from .controllers.routers.finances.history import withdraw_history, deposit_hist
 from .controllers.routers.account import signup, login
 
 from fastapi.middleware.gzip import GZipMiddleware
+from slowapi.errors import RateLimitExceeded
 
-from fastapi import FastAPI
+from fastapi.responses import JSONResponse
+
+from fastapi import FastAPI, Request
 
 app = FastAPI(docs="/docs")
 
@@ -26,6 +29,14 @@ app.include_router(login.router)
 app.include_router(asset.router)
 app.include_router(sell.router)
 app.include_router(buy.router)
+
+@app.exception_handler(RateLimitExceeded)
+async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
+    return JSONResponse(
+        status_code=429,
+        content={
+            "status": "error",
+            "message": "Rate limit exceeded. Try again later."})
 
 @app.get("/")
 async def root():

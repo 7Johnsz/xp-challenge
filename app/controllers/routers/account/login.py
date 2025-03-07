@@ -2,15 +2,16 @@ from fastapi import Request, status, Response
 from fastapi.responses import ORJSONResponse
 from ....utils.token import generate_uuid
 from ...config.database import redis_conn
+from ...config.api import router, limiter
 from ...config.database import database
 from ....utils.token import get_token
 from ....models.user import Client
-from ...config.api import router
 
 import datetime
 import psycopg2
 
 @router.post("/login", response_class=ORJSONResponse)
+@limiter.limit("30/minute")
 async def signup(request: Request, response: Response, login: Client):
     """
     Endpoint to log in a client using their email and password.

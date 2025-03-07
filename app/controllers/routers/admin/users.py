@@ -1,13 +1,14 @@
 from ....services.admin import AdminAuthService
 from fastapi import Request, status, Response
 from fastapi.responses import ORJSONResponse
+from ...config.api import router, limiter
 from ...config.database import database
 from ....services.auth import find_key
-from ...config.api import router
 
 import datetime
 
 @router.get("/admin/users", response_class=ORJSONResponse)
+@limiter.limit("30/minute")
 @AdminAuthService
 async def users(request: Request, response: Response):
     """

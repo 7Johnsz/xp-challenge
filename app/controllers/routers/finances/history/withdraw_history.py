@@ -1,13 +1,14 @@
 from fastapi import Request, status, Response
 from fastapi.responses import ORJSONResponse
+from ....config.api import router, limiter
 from .....services.auth import AuthService
 from ....config.database import database
 from .....services.auth import find_key
-from ....config.api import router
 
 import datetime
 
 @router.get("/withdraw-history", response_class=ORJSONResponse)
+@limiter.limit("30/minute")
 @AuthService
 async def withdraw_history(request: Request, response: Response):
     """

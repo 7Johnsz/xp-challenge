@@ -4,12 +4,13 @@ from fastapi.responses import ORJSONResponse
 from ....services.auth import AuthService
 from ...config.database import redis_conn  
 from ...config.database import database
-from ...config.api import router
+from ...config.api import router, limiter
 from ....services.auth import find_key
 
 import datetime
 
 @router.patch("/deposit", response_class=ORJSONResponse)
+@limiter.limit("30/minute")
 @AuthService
 async def deposit(request: Request, response: Response, deposit_data: Deposit):
     """

@@ -1,13 +1,14 @@
 from fastapi import Request, status, Response
 from fastapi.responses import ORJSONResponse
+from ...config.api import router, limiter
 from ....services.auth import AuthService
 from ...config.database import database
 from ....services.auth import find_key
-from ...config.api import router
 
 import datetime
 
 @router.get("/account", response_class=ORJSONResponse)
+@limiter.limit("30/minute")
 @AuthService
 async def checking_account(request: Request, response: Response):
     """

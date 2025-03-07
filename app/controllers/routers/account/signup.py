@@ -1,13 +1,14 @@
 from fastapi import Request, status, Response
 from fastapi.responses import ORJSONResponse
+from ...config.api import router, limiter
 from ...config.database import database
 from ....models.user import Client
-from ...config.api import router
 
 import datetime
 import psycopg2
 
 @router.post("/signup", response_class=ORJSONResponse)
+@limiter.limit("30/minute")
 async def signup(request: Request, client: Client, response: Response):
     """
     Endpoint to sign up a new client.

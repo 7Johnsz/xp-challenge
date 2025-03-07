@@ -1,14 +1,15 @@
+from .....models.buy_schema import BuyandSell
 from fastapi import Request, status, Response
 from fastapi.responses import ORJSONResponse
+from ....config.api import router, limiter
 from .....services.auth import AuthService
 from ....config.database import database
 from .....services.auth import find_key
-from ....config.api import router
-from .....models.buy_schema import BuyandSell
 
 import datetime
 
 @router.post("/stockmarket/sell", response_class=ORJSONResponse)
+@limiter.limit("30/minute")
 @AuthService
 async def sell_asset(request: Request, response: Response, sell_asset: BuyandSell):
     """
