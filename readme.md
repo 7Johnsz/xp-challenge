@@ -392,6 +392,4 @@ AUTHORIZATION: 123 (Vicê pode customizar no .env)
     > git clone https://github.com/7Johnsz/xp-challenge.git
 
 2. Buildar conteiners utilizando Docker
-    > docker-compose up -d 
-
-    E Pronto!
+    > docker-compose up -d
